@@ -1,0 +1,1 @@
+ tfidf = vectorizer.fit_transform(sentence_tokens)

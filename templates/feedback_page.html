@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Form</title>
+  <style>
+    /* Your existing CSS for star rating */
+    .star-rating {
+      font-size: 0;
+      white-space: nowrap;
+      display: inline-block;
+      width: 250px;
+      height: 50px;
+      overflow: hidden;
+      position: relative;
+      background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+      background-size: contain;
+      i {
+        opacity: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 20%;
+        z-index: 1;
+        background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');  
+        background-size: contain;
+      }
+      input { 
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        opacity: 0;
+        display: inline-block;
+        width: 20%;
+        height: 100%; 
+        margin: 0;
+        padding: 0;
+        z-index: 2;
+        position: relative;
+        &:hover + i,
+        &:checked + i {
+          opacity: 1;    
+        }
+      }
+      i ~ i {
+        width: 40%;
+      }
+      i ~ i ~ i {
+        width: 60%;
+      }
+      i ~ i ~ i ~ i {
+        width: 80%;
+      }
+      i ~ i ~ i ~ i ~ i {
+        width: 100%;
+      }
+    }
+
+    /* Additional styling for the feedback form */
+    body {
+      background-color: #f5ebf5;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #feedback-form {
+      background-color: #fad2e1;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .key-point {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    #username {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .rating-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .star {
+      font-size: 24px;
+      color: #ccc;
+      cursor: pointer;
+    }
+
+    .star:hover,
+    .star.selected {
+      color: #ffcc00;
+    }
+
+    #comment-box {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #clear-btn,
+    #submit-btn {
+      padding: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+    #clear-btn {
+      background-color: #ff6666;
+      color: #fff;
+    }
+
+    #submit-btn {
+      background-color: #33cc33;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="feedback-form">
+    <h2>Feedback for the Chatbot</h2>
+    
+    <label for="username" class="key-point">Username</label>
+    <input type="text" id="username" placeholder="Enter your username">
+
+    <div class="key-point1">
+      1. Response of Chatbot
+      <div class="rating-container">
+        <span class="star-rating">
+          <input type="radio" name="response" value="1"><i></i>
+          <input type="radio" name="response" value="2"><i></i>
+          <input type="radio" name="response" value="3"><i></i>
+          <input type="radio" name="response" value="4"><i></i>
+          <input type="radio" name="response" value="5"><i></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="key-point2">
+      2. Correctness of Answer
+      <div class="rating-container">
+        <span class="star-rating">
+          <input type="radio" name="response" value="1"><i></i>
+          <input type="radio" name="response" value="2"><i></i>
+          <input type="radio" name="response" value="3"><i></i>
+          <input type="radio" name="response" value="4"><i></i>
+          <input type="radio" name="response" value="5"><i></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="key-point3">
+      3.  Clarity of Answer
+      <div class="rating-container">
+        <span class="star-rating">
+          <input type="radio" name="response" value="1"><i></i>
+          <input type="radio" name="response" value="2"><i></i>
+          <input type="radio" name="response" value="3"><i></i>
+          <input type="radio" name="response" value="4"><i></i>
+          <input type="radio" name="response" value="5"><i></i>
+        </span>
+      </div>
+    </div>
+
+    <div class="key-point4">
+        4. Overall Experience
+        <div class="rating-container">
+          <span class="star-rating">
+            <input type="radio" name="response" value="1"><i></i>
+            <input type="radio" name="response" value="2"><i></i>
+            <input type="radio" name="response" value="3"><i></i>
+            <input type="radio" name="response" value="4"><i></i>
+            <input type="radio" name="response" value="5"><i></i>
+          </span>
+        </div>
+      </div>
+
+    <!-- Repeat the above block for other key points -->
+
+    <div>
+      <label for="comment-box" class="key-point">Comment Box</label>
+      <textarea id="comment-box" rows="4" placeholder="Write your comments here"></textarea>
+    </div>
+
+    <button id="clear-btn" onclick="clearForm()">Clear</button>
+    <button id="submit-btn" onclick="submitForm()">Submit</button>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+    $('.star-rating input').change(function() {
+      const selectedKey = $(this).attr('name');
+      const selectedStars = parseInt($(this).val());
+      $(`[data-key="${selectedKey}"].star`).removeClass('selected');
+      $(`[data-key="${selectedKey}"].star:lt(${selectedStars})`).addClass('selected');
+    });
+
+    function clearForm() {
+      $('#username').val('');
+      $('.star-rating input').prop('checked', false);
+      $('.star-rating .star').removeClass('selected');
+      $('#comment-box').val('');
+    }
+
+    function submitForm() {
+      const username = $('#username').val();
+      const feedback = {
+        response: getSelectedStars('response'),
+        correctness: getSelectedStars('correctness'),
+        clarity: getSelectedStars('clarity'),
+        experience: getSelectedStars('experience'),
+        comment: $('#comment-box').val(),
+      };
+
+      // Assuming you have a function to save feedback to the database
+      saveToDatabase(username, feedback);
+    }
+
+    function getSelectedStars(key) {
+      const selectedStar = $(`[name="${key}"]:checked`).val();
+      return selectedStar ? parseInt(selectedStar) : 0;
+    }
+
+    function saveToDatabase(username, feedback) {
+      // Assuming you have a backend endpoint to handle database storage
+      // You can use AJAX, fetch, or any other method to send data to the server
+      console.log('Username:', username);
+      console.log('Feedback:', feedback);
+      alert('Feedback submitted successfully!');
+    }
+  </script>
+</body>
+</html>

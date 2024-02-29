@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequently Asked Questions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #800080;
+            margin-bottom: 20px;
+        }
+
+        #chart-container {
+            width: 80%;
+            margin: auto;
+            margin-bottom: 20px;
+        }
+
+        #chart-container img {
+            display: block;
+            margin: auto;
+        }
+
+        #graph-container {
+            width: 80%;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        #graph-container img {
+            display: block;
+            margin: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            width: 80%;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #800080;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <h1>Frequently Asked Questions</h1>
+
+    <div id="chart-container">
+        <h2>Pie Chart: Top 10 Queries Distribution</h2>
+        <img src="data:image/png;base64,{{ chart_pie_chart }}" alt="Pie Chart">
+    </div>
+
+    <div id="graph-container">
+        <h2>Time Series Graph</h2>
+        <img src="data:image/png;base64,{{ chart_time_series }}" alt="Time Series Graph">
+    </div>
+
+    <div id="table-container">
+        <h2>Top Queries</h2>
+        <table>
+            <tr>
+                <th>Query</th>
+                <th>Count</th>
+            </tr>
+            {% for row in topquery_data %}
+            <tr>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[0] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
