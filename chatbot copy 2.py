@@ -340,7 +340,7 @@ def insert_into_database(user_query):
             print("Connected to the database")
             cursor = db.cursor()
             user_id = generate_short_user_id()  # Generate a shorter user ID
-            insert_query = "INSERT INTO TopQuery (userId, query) VALUES (%s, %s)"
+            insert_query = "INSERT INTO TopQuery (userId, query,query_date) VALUES (%s, %s,CURDATE())"
             cursor.execute(insert_query, (user_id, user_query))
             db.commit()
             cursor.close()

@@ -9,14 +9,12 @@ from bcrypt import hashpw, checkpw, gensalt
 import mysql.connector
 from mysql.connector import Error
 from uuid import uuid4
-import speech_recognition as sr
 import pandas as pd
+import speech_recognition as sr
 import pyttsx3
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
-import datetime
-
 app = Flask(__name__)
 
 # Your MySQL database connection details
@@ -209,88 +207,80 @@ if db.is_connected():
 else:
     print("Failed to connect to MySQL database")
 cursor = db.cursor()
-import matplotlib.pyplot as plt
-import pandas as pd
-
+    
+    
 @app.route('/faq')
 def faq():
     try:
-        # Query to fetch data
-        query = "SELECT query, query_date FROM topquery WHERE query_date IS NOT NULL"
+        # Query to fetch data for the time series graph
+        query_time_series = "SELECT query, query_date FROM topquery WHERE query_date IS NOT NULL"
 
-        cursor.execute(query)
+        cursor.execute(query_time_series)
 
-        # Fetching query results
-        top_queries = cursor.fetchall()
+        # Fetching query results for the time series graph
+        top_queries_time_series = cursor.fetchall()
 
-        # Convert the fetched data into a DataFrame
-        df = pd.DataFrame(top_queries, columns=['query', 'query_date'])
+        # Convert the fetched data into a DataFrame for the time series graph
+        df_time_series = pd.DataFrame(top_queries_time_series, columns=['query', 'query_date'])
 
         # Remove None values from the DataFrame
-        df = df.dropna(subset=['query_date'])
+        df_time_series = df_time_series.dropna(subset=['query_date'])
 
-        # Convert the query_date column to datetime
-        df['query_date'] = pd.to_datetime(df['query_date']).dt.date
+        # Convert the query_date column to datetime for the time series graph
+        df_time_series['query_date'] = pd.to_datetime(df_time_series['query_date']).dt.date
 
-        # Group by date and count the number of queries for each date
-        query_counts = df.groupby('query_date').size()
+        # Group by date and count the number of queries for each date for the time series graph
+        query_counts_time_series = df_time_series.groupby('query_date').size()
 
         # Plotting the time series graph
         plt.figure(figsize=(10, 6))
-        query_counts.plot(kind='line', marker='o', color='b')
+        query_counts_time_series.plot(kind='line', marker='o', color='b')
         plt.title('Number of Queries Over Time')
         plt.xlabel('Date')
         plt.ylabel('Number of Queries')
 
-        # Convert the plot to a bytes object
-        img = BytesIO()
-        plt.savefig(img, format='png')
-        img.seek(0)
-        chart_url = base64.b64encode(img.getvalue()).decode()
-        img.close()
+        # Save the time series graph to a bytes object
+        img_time_series = BytesIO()
+        plt.savefig(img_time_series, format='png')
+        img_time_series.seek(0)
+        chart_url_time_series = base64.b64encode(img_time_series.getvalue()).decode()
+        img_time_series.close()
 
-        # Close MySQL cursor and return the rendered template with the chart
-        return render_template('faq.html', chart=chart_url)
+        # Query to fetch data for the pie chart
+        query_pie_chart = "SELECT count, query FROM freqt_query"
+
+        cursor.execute(query_pie_chart)
+
+        # Fetching query results for the pie chart
+        top_queries_pie_chart = cursor.fetchall()
+
+        # Extracting data for the pie chart
+        queries_pie_chart = [query[1] for query in top_queries_pie_chart]
+        counts_pie_chart = [query[0] for query in top_queries_pie_chart]
+
+        # Creating Pie Chart
+        plt.figure(figsize=(8, 6))
+        plt.pie(counts_pie_chart, labels=queries_pie_chart, autopct='%1.1f%%', startangle=140)
+        plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+        plt.title('Top Queries Distribution')
+
+        # Save the pie chart to a bytes object
+        img_pie_chart = BytesIO()
+        plt.savefig(img_pie_chart, format='png')
+        img_pie_chart.seek(0)
+        chart_url_pie_chart = base64.b64encode(img_pie_chart.getvalue()).decode()
+        img_pie_chart.close()
+        topquery_query = "SELECT count(*),query FROM topquery where query is not null group by query order by count(*) desc limit 14 "
+        cursor.execute(topquery_query)
+        topquery_data = cursor.fetchall()
+
+        # Render the FAQ page with both charts and the top query data
+        return render_template('faq.html', chart_time_series=chart_url_time_series, chart_pie_chart=chart_url_pie_chart, topquery_data=topquery_data)
+
     except Error as e:
         print(f"Error: {e}")
 
-    
-    
-# @app.route('/faq')
-# def faq():
-#     query = f"SELECT query, count FROM freqt_query"
 
-   
-#     cursor.execute(query)
-
-#     # Fetching query results
-#     top_queries = cursor.fetchall()
-
-#     queries = [query[0] for query in top_queries]
-#     counts = [query[1] for query in top_queries]
-
-#     # Creating Pie Chart
-#     plt.figure(figsize=(8, 6))
-#     plt.pie(counts, labels=queries, autopct='%1.1f%%', startangle=140)
-#     plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-#     plt.title('Top 10 Queries Distribution')
-
-#     # Save the pie chart to a bytes object
-#     img = BytesIO()
-#     plt.savefig(img, format='png')
-#     img.seek(0)
-#     chart_url = base64.b64encode(img.getvalue()).decode()
-#     img.close()
-#     topquery_query = "SELECT count(*),query FROM topquery where query is not null group by query order by count(*) desc limit 14 "
-#     cursor.execute(topquery_query)
-#     topquery_data = cursor.fetchall()
-
-#     # Close MySQL cursor
-    
-
-#     return render_template('faq.html', chart=chart_url, topquery_data=topquery_data)
-#     # Close MySQL connection
-    
 
 
     
@@ -350,11 +340,8 @@ def insert_into_database(user_query):
             print("Connected to the database")
             cursor = db.cursor()
             user_id = generate_short_user_id()  # Generate a shorter user ID
-            insert_query = "INSERT INTO topquery (userid, query, query_date) VALUES (%s, %s, %s)"
-            current_date = datetime.date.today()  # Get the current date
-
-            # Execute the query with user_id, user_query, and current_date
-            cursor.execute(insert_query, (user_id, user_query, current_date))
+            insert_query = "INSERT INTO TopQuery (userId, query,query_date) VALUES (%s, %s,CURDATE())"
+            cursor.execute(insert_query, (user_id, user_query))
             db.commit()
             cursor.close()
             print("Data inserted into the database")
@@ -365,11 +352,6 @@ def insert_into_database(user_query):
 @app.route("/home")
 def home():
     return render_template("home.html")
-
-from langdetect import detect
-from googletrans import Translator
-
-translator = Translator()
 
 @app.route('/get_response', methods=['POST'])
 def get_response():
@@ -396,13 +378,6 @@ def get_response():
         if user_response is None:
             user_response = request.form.get('user_input', '').lower()
 
-        # Detect the language of the user input
-        detected_lang = detect(user_response)
-
-        # If the detected language is not English, translate the user input to English
-        if detected_lang != 'en':
-            user_response = translator.translate(user_response, src=detected_lang, dest='en').text
-
         if user_response != 'bye':
             if user_response == 'thanks' or user_response == 'thank you':
                 return "You're welcome!"
@@ -419,48 +394,6 @@ def get_response():
     except Exception as e:
         print(f"Error in get_response: {e}")
         return "An error occurred"
-
-# @app.route('/get_response', methods=['POST'])
-# def get_response():
-#     try:
-#         user_response = None
-
-#         # Check if the request contains an audio file
-#         if 'audio_input' in request.files:
-#             recognizer = sr.Recognizer()
-#             audio_file = request.files['audio_input']
-
-#             # Handle audio processing (speech-to-text)
-#             try:
-#                 with sr.AudioFile(audio_file) as source:
-#                     audio_data = recognizer.record(source)
-#                     audio_text = recognizer.recognize_google(audio_data)
-#                 user_response = audio_text.lower()
-#             except sr.UnknownValueError:
-#                 user_response = "Sorry, I could not understand the audio."
-#             except sr.RequestError as e:
-#                 user_response = f"Error accessing the Google Speech Recognition API: {e}"
-
-#         # If no audio input or the processing failed, use text input
-#         if user_response is None:
-#             user_response = request.form.get('user_input', '').lower()
-
-#         if user_response != 'bye':
-#             if user_response == 'thanks' or user_response == 'thank you':
-#                 return "You're welcome!"
-#             else:
-#                 if greeting(user_response) is not None:
-#                     return greeting(user_response)
-#                 else:
-#                     insert_into_database(user_response)
-#                     return response(user_response)
-#                     sentence_tokens.remove(user_response)
-#         else:
-#             return "Bye! Have a great day. Please Provide Feedback"
-
-#     except Exception as e:
-#         print(f"Error in get_response: {e}")
-#         return "An error occurred"
 
 # @app.route('/save_feedback', methods=['POST'])
 # def handle_feedback():
