@@ -17,7 +17,7 @@ from io import BytesIO
 import base64
 app = Flask(__name__)
 
-# Your MySQL database connection details
+
 app.secret_key = '123'
 
 
@@ -212,24 +212,24 @@ cursor = db.cursor()
 @app.route('/faq')
 def faq():
     try:
-        # Query to fetch data for the time series graph
+       
         query_time_series = "SELECT query, query_date FROM topquery WHERE query_date IS NOT NULL"
 
         cursor.execute(query_time_series)
 
-        # Fetching query results for the time series graph
+        
         top_queries_time_series = cursor.fetchall()
 
-        # Convert the fetched data into a DataFrame for the time series graph
+        
         df_time_series = pd.DataFrame(top_queries_time_series, columns=['query', 'query_date'])
 
-        # Remove None values from the DataFrame
+        
         df_time_series = df_time_series.dropna(subset=['query_date'])
 
-        # Convert the query_date column to datetime for the time series graph
+       
         df_time_series['query_date'] = pd.to_datetime(df_time_series['query_date']).dt.date
 
-        # Group by date and count the number of queries for each date for the time series graph
+       
         query_counts_time_series = df_time_series.groupby('query_date').size()
 
         # Plotting the time series graph
@@ -395,36 +395,31 @@ def get_response():
         print(f"Error in get_response: {e}")
         return "An error occurred"
 
-# @app.route('/save_feedback', methods=['POST'])
-# def handle_feedback():
-#     feedback = request.form['feedback']
-#     save_feedback(feedback)
-#     return 'success'
-
 # Create a new route to handle user feedback
-@app.route('/feedback', methods=['GET', 'POST'])
+@app.route('/feedback', methods=['GET','POST'])
 def handle_feedback():
     if request.method == 'POST':
         # Retrieve feedback data from the form
-        response_chatbot = int(request.form.get('response1', 0))
-        correctness_answer = int(request.form.get('response2', 0))
-        clarity_answer = int(request.form.get('response3', 0))
-        category = request.form.get('category_dropdown', '')
-        comment = request.form.get('comment1', '')
-
+        response = int(request.form.get('response', 0))
+        correctness = int(request.form.get('correctness', 0))
+        clarity = int(request.form.get('clarity', 0))
+        comment = request.form.get('comment', '')
         
+    try:
         if db.is_connected():
             cursor = db.cursor()
-            # Insert feedback into the 'feedback' table
-            insert_query = "INSERT INTO feedback (response_chatbot,correctness_answer,clarity_answer,category,comment) VALUES (%s, %s, %s, %s, %s)"
-            cursor.execute(insert_query, (response_chatbot, correctness_answer, clarity_answer, category, comment))
+            insert_query = "INSERT INTO feedbacked (response, correctness, clarity, comment) VALUES (%s, %s, %s, %s)"
+            cursor.execute(insert_query, (response, correctness, clarity, comment))
             db.commit()
             cursor.close()
-            # Redirect the user to the feedback confirmation page
-            return render_template('feedback.html')
+            flash('Feedback submitted successfully!', 'success')
+        else:
+            flash('Failed to submit feedback. Please try again later.', 'error')
+    except Exception as e:
+        print(f"Error: {e}")
+        flash('An error occurred while submitting your feedback. Please try again later.', 'error')
 
-        
-    return render_template('feedback.html')
+    return redirect('/feedback.html')
 
 
 if __name__ == "__main__":

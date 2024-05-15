@@ -187,7 +187,7 @@ categories:
    Average Salary(LPA): 8.1.
 
 
-  - Dr.S.P.Sonavane is Dean of academics.
+  
 
   - Ajit Gulabchand Central Library is in Walchand College of Engineering.
   - WCE library name - Ajit Gulabchand Central Library.
@@ -239,6 +239,35 @@ Closing time of library is 5:30 PM.
   - Library remains closed on weekend (ie on Saturday and Sunday)
     and also on academic holidays.
 
+  - Library holdings :
+
+ Total Area of Library : 4680 sqmt
+ Library Staff : 7
+ Total Number of Readers : 3471
+ Total Number of Books : 56383
+ Total Book Bank Books : 38412
+ Total Number of Titles : 43143
+ Total Bound Volumes of Periodicals : 13064
+ Proceedings : 322
+ Total No of ME Dissertations : 3013
+ Educational Video Cassettes : 77
+ CD : 3412
+ DVD : 577
+ Floppies : 419
+ Total No of Transparencies : 130
+ Microfiches : 1700
+ E-books : 2325 .
+
+ -Equipment:
+
+Personal Computers with internet connectivity : 60
+Printers : 3
+Xerox Machines : 2
+Scanner : 2
+Micro Film Reader : 1
+
+Multimedia Center/ Discussion Room with LCD Facility +TV,VCE,DVD player etc.
+
   -  Reading hall facility 
    Reading Hall facility is available round the clock for full year and provides study room facility during normal and extended hours.
 
@@ -269,6 +298,12 @@ Closing time of library is 5:30 PM.
     C.M.D: 500/-
     College fee: 4170/-
     --Total Rs: 78020/-.
+
+  - Academic Calendar FY BTech and FY MTech odd Semester 2023-24: "https://www.walchandsangli.ac.in/documents/Academics/2324/Academic%20Calendar%20FY%20BTech%20and%20FY%20MTech%20Odd%20Sem%20AY%2023-24.pdf ".
+
+  - Academic and examination rules and regulations: "https://www.walchandsangli.ac.in/documents/Academics/2324/Updated%20Academic%20RRs%20AY%202023-24%20.pdf ".
+
+  - WCE moodle link: "http://103.30.64.60/ ".
 
 
 

@@ -218,19 +218,35 @@
     }
 
     function submitForm() {
-        const feedback = {
+      const feedback = {
           response1: getSelectedStars('response1'),
           response2: getSelectedStars('response2'),
           response3: getSelectedStars('response3'),
           category: $('#category-dropdown').val(),
-          comment1: $('#comment1').val(),  // Adjusted the field name here
-          
+          comment1: $('#comment1').val(),
+      };
+  
+      $.ajax({
+          url: '/feedback',
+          type: 'POST',
+          data: feedback,
+          success: function(response) {
+              console.log('Feedback submitted successfully!');
+              alert('Feedback submitted successfully!');
+              clearForm(); // Clear the form after successful submission
+          },
+          error: function(xhr, status, error) {
+              console.error('Error:', error);
+              alert('Error occurred while submitting feedback. Please try again later.');
+          }
+      });
+  
       };
       window.location.href = "{{ url_for('handle_feedback') }}";
 
       // Assuming you have a function to save feedback to the database
       saveToDatabase(feedback);
-    }
+    
 
     function getSelectedStars(key) {
       const selectedStar = $(`[name="${key}"]:checked`).val();
