@@ -146,51 +146,6 @@ def response(user_response):
     sentence_tokens.pop()  # Remove the last item, which is the user's input
 
     return robo_response
-# def response(user_response):
-#     robo_response = ''
-#     sentence_tokens.append(user_response)
-    
-#     # Append the user response to the dataset
-#     vectorizer = TfidfVectorizer(tokenizer=lem_normalize, stop_words='english')
-#     tfidf = vectorizer.fit_transform(sentence_tokens)
-
-#     # Calculate cosine similarity
-#     values = cosine_similarity(tfidf[-1], tfidf)
-#     idx = values.argsort()[0][-2]
-#     flat = values.flatten()
-#     flat.sort()
-#     req_tfidf = flat[-2]
-
-#     if req_tfidf == 0:
-#         robo_response = '{} Sorry, I don\'t understand you. How can I improve?'.format(robo_response)
-#     else:
-#         robo_response = sentence_tokens[idx] + ' Any other questions or feedback?'
-    
-#     max_matches = 0
-#     list_name = ''
-#     for name, keyword_list in keyword_lists.items():
-#             matches = sum([1 for keyword in keyword_list if keyword in robo_response])
-#             if matches > max_matches:
-#                 max_matches = matches
-#                 list_name = name
-        
-#         # Append the list name to ans.txt
-#     with open('ans.txt', 'a') as f:
-#             f.write(list_name + '\n')
-#      # Convert text response to speech
-#     global engine_busy
-#     if not engine_busy:
-#         engine_busy = True
-#         try:
-#             engine.say(robo_response)
-#             engine.runAndWait()
-#         except Exception as e:
-#             print(f"Error converting text to speech: {e}")
-#         finally:
-#             engine_busy = False
-
-#     # Remove the user response from sentence_tokens
-#     sentence_tokens.pop()  # Remove the last item, which is the user's input
 
 #     return robo_response
 
@@ -395,11 +350,6 @@ def get_response():
         print(f"Error in get_response: {e}")
         return "An error occurred"
 
-# @app.route('/save_feedback', methods=['POST'])
-# def handle_feedback():
-#     feedback = request.form['feedback']
-#     save_feedback(feedback)
-#     return 'success'
 
 # Create a new route to handle user feedback
 @app.route('/feedback', methods=['GET', 'POST'])
