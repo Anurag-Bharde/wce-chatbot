@@ -1,0 +1,11 @@
+Flask==3.0.0
+gunicorn==20.1.0
+numpy==1.23.4
+scikit-learn==1.2.2
+nltk==3.8.1
+mysql-connector-python==8.2.0
+bcrypt==4.1.1
+pyttsx3==2.90
+pandas==1.5.2
+matplotlib==3.6.2
+SpeechRecognition==3.10.1
