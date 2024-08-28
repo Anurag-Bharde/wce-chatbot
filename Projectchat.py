@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for,flash, jsonify
 import nltk
 import numpy as np
@@ -18,7 +19,8 @@ import base64
 app = Flask(__name__)
 
 # Your MySQL database connection details
-app.secret_key = '123'
+
+app.secret_key = os.getenv('SECRET_KEY', 'default_key')
 
 
 FILE_PATH = 'All_Info.txt'
@@ -149,13 +151,13 @@ def response(user_response):
 
 #     return robo_response
 
-db = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='Anuraggb',
-    database='wce_chatbot',
-    port=3306
 
+db = mysql.connector.connect(
+    host=os.getenv('DB_HOST', 'localhost'),
+    user=os.getenv('DB_USER', 'root'),
+    password=os.getenv('DB_PASSWORD', 'Anuraggb'),
+    database=os.getenv('DB_NAME', 'wce_chatbot'),
+    port=os.getenv('DB_PORT', 3306)
 )
 if db.is_connected():
     print("Connected to MySQL database")
